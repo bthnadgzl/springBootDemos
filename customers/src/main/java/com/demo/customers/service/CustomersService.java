@@ -8,12 +8,13 @@ import com.demo.customers.entity.Customers;
 
 public interface CustomersService {
 	
-	public void create(Customers customer);
-	public void update(Customers customer);
-	public Customers search(UUID uuid);
+	public Customers create(Customers customer);
+	public Customers update(Customers customer);
+	public Customers search(long identityNo);
 	public void delete(UUID uuid);
 	public void permissionTrue(UUID uuid);
 	public void permissionFalse(UUID uuid);
 	public List<Customers> getAll();
+	public UUID getId(long identityNo);
 
 }

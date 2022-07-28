@@ -1,5 +1,6 @@
 package com.demo.customers.entity;
 
+import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -7,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,17 +22,24 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 public class Customers {
-	@Getter
+
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID" , strategy = "org.hibernate.id.UUIDGenerator")
 	@Column(name="customer", updatable=false, nullable=false, columnDefinition = "BINARY(16)")
 	@JsonProperty("customerid")
-	
 	private UUID customerId;
 	
+	@Column(updatable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createdDate = new Date();
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date updatedDate = new Date();
+	
+	
 	@Column(name="identity_no")
-	@JsonProperty("identityno")
+	@JsonProperty("identityNo")
 	private long identityNo;
 	
 	@Column(name="name")
@@ -52,6 +62,8 @@ public class Customers {
 	@JsonProperty("permission")
 	private boolean permission;
 	
+	
+
 	
 	public Customers(long identityNo, String name, String surname, int age, String adress) {
 		this.identityNo = identityNo;

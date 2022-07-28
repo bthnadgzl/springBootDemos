@@ -7,48 +7,50 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.demo.customers.entity.Customers;
-import com.demo.customers.repository.CustomersDto;
+import com.demo.customers.repository.CustomersDao;
 
 @Service
 public class CustomersServiceImpl implements CustomersService{
-	private CustomersDto customersDto;
 	
-	@Autowired
-	public CustomersServiceImpl(CustomersDto customersDto) {
-		this.customersDto = customersDto;
-	}
+	@Autowired CustomersDao customersDao;
 	
 	@Override
-	public void create(Customers customer) {
-		customersDto.save(customer);
+	public Customers create(Customers customer) {
+		return customersDao.save(customer);
 	}
 	@Override
-	public void update(Customers customer) {
-		customersDto.save(customer);
+	public Customers update(Customers customer) {
+		
+		return customersDao.save(customer);
 	}
 	@Override
-	public Customers search(UUID uuid) {
-		return customersDto.findById(uuid).get();
+	public Customers search(long identityNo) {
+		return customersDao.findByIdentityNo(identityNo);
 	}
 	@Override
 	public void delete(UUID uuid) {
-		customersDto.deleteById(uuid);
+		customersDao.deleteById(uuid);
 	}
 	@Override
 	public void permissionTrue(UUID uuid) {
-		Customers customer = customersDto.findById(uuid).get();
+		Customers customer = customersDao.findById(uuid).get();
 		customer.setPermission(true);
-		customersDto.save(customer);
+		customersDao.save(customer);
 	}
 	@Override
 	public void permissionFalse(UUID uuid) {
-		Customers customer = customersDto.findById(uuid).get();
+		Customers customer = customersDao.findById(uuid).get();
 		customer.setPermission(false);
-		customersDto.save(customer);
+		customersDao.save(customer);
 	}
 	@Override
 	public List<Customers> getAll(){
-		return (List<Customers>) customersDto.findAll();
+		return (List<Customers>) customersDao.findAll();
 	}
+	public UUID getId(long identityNo) {
+		Customers customer = customersDao.findByIdentityNo(identityNo);
+		return customer.getCustomerId();
+	}
+	
 	
 }

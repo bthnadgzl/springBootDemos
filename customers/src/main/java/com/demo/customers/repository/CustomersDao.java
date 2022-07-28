@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.demo.customers.entity.Customers;
 
 @Repository
-public interface CustomersDto extends CrudRepository<Customers,UUID>{
+public interface CustomersDao extends CrudRepository<Customers,UUID>{
+	Customers findByIdentityNo(long identityNo);
 }
