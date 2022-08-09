@@ -1,9 +1,12 @@
 package com.demo.customers.service;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.demo.customers.entity.Customers;
@@ -44,12 +47,21 @@ public class CustomersServiceImpl implements CustomersService{
 		customersDao.save(customer);
 	}
 	@Override
-	public List<Customers> getAll(){
-		return (List<Customers>) customersDao.findAll();
+	public boolean getPermission(UUID uuid) {
+		Customers customer = customersDao.findById(uuid).get();
+		return customer.isPermission();
+	}
+	@Override
+	public Page<Customers> getAll(Optional<Integer> page, Optional<String> sortBy){
+		return customersDao.findAll(PageRequest.of(page.orElse(0), 5, Sort.Direction.ASC, sortBy.orElse("name")));
 	}
 	public UUID getId(long identityNo) {
 		Customers customer = customersDao.findByIdentityNo(identityNo);
 		return customer.getCustomerId();
+	}
+	@Override
+	public Customers searchByUuid(UUID uuid) {
+		return customersDao.findById(uuid).get();
 	}
 	
 	

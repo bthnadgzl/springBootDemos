@@ -1,13 +1,17 @@
 package com.demo.products.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,44 +31,41 @@ public class ProductsController {
 	
 	
 	
-	@PostMapping("/create")
-	public ResponseEntity<Products> create(@RequestBody ProductsDto productDto) {
+	@PostMapping
+	public ResponseEntity<ProductsDto> create(@RequestBody ProductsDto productDto) {
 		Products product = productsConverter.dtoToEntity(productDto);
-		return ResponseEntity.ok(productsService.create(product));
+		productsService.create(product);
+		return ResponseEntity.ok(productDto);
 	}
 
-	@PostMapping("/update")
+	@PutMapping
 	public ResponseEntity<Products> update(@RequestBody Products product) { //UUID needed.
 		return ResponseEntity.ok(productsService.create(product));
 	}
 	
-	@PostMapping("/delete/{uuid}")
+	@DeleteMapping("/{uuid}")
 	public void delete(@PathVariable UUID uuid) {
 		productsService.delete(uuid);
 	}
 	
-	@GetMapping("/search/{uuid}")
+	@GetMapping("/{uuid}")
 	public ResponseEntity<ProductsDto> search(@PathVariable UUID uuid) {
 		Products product = productsService.search(uuid);
 		return ResponseEntity.ok(productsConverter.entityToDto(product));
 	}
 	
-	@GetMapping("/getAll")
-	public ResponseEntity<List<ProductsDto>> getAll(){
-		List<Products> products = productsService.getAll();
-		return ResponseEntity.ok(productsConverter.entityToDto(products));
+	@GetMapping
+	public ResponseEntity<Page<Products>> getAll(Optional<Integer> page, Optional<String> sortBy){
+		Page<Products> products = productsService.getAll(page,sortBy);
+		return ResponseEntity.ok(products);
 	}
 	
-	@GetMapping("/getCategory")
-	public ResponseEntity<List<ProductsDto>> getCategory(String category){
+	@GetMapping("/search_by_category/{category}")
+	public ResponseEntity<List<ProductsDto>> getByCategory(@PathVariable String category){
 		List<Products> products = productsService.getByCategory(category);
 		return ResponseEntity.ok(productsConverter.entityToDto(products));
 	}
 	
-	@GetMapping("/getAllAdmin")
-	public ResponseEntity<List<Products>> getAllAdmin(){
-		return ResponseEntity.ok(productsService.getAll());
-	}
 }
 
 

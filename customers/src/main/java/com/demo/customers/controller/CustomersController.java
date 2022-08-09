@@ -1,10 +1,12 @@
 package com.demo.customers.controller;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,21 +21,22 @@ import com.demo.customers.entity.Customers;
 import com.demo.customers.service.CustomersService;
 
 @RestController
-@RequestMapping("/apiCustomers")
+@RequestMapping("/api_customers")
 public class CustomersController {
 	
 	@Autowired CustomersConverter customersConverter;
 	@Autowired CustomersService customersService;
 	
 	
-	@PostMapping("/create")
-	public ResponseEntity<Customers> create(@RequestBody CustomersDto customerDto) {
+	@PostMapping
+	public ResponseEntity<CustomersDto> create(@RequestBody CustomersDto customerDto) {
 		Customers customer = customersConverter.dtoToEntity(customerDto);
-		return ResponseEntity.ok(customersService.create(customer));
+		customersService.create(customer);
+		return ResponseEntity.ok(customerDto);
 	}
 	
-	@PutMapping("/update")
-	public ResponseEntity<Customers> update(@RequestBody Customers customer) { //Id ile birlikte girilmez ise yeni kayıt oluşturur.
+	@PutMapping
+	public ResponseEntity<Customers> update(@RequestBody Customers customer) { //UUID needed.
 		return ResponseEntity.ok(customersService.update(customer));
 	}
 	
@@ -42,28 +45,32 @@ public class CustomersController {
 		Customers customer = customersService.search(identityNo);
 		return ResponseEntity.ok(customersConverter.entityToDto(customer));
 	}
+	@GetMapping("/search_by_uuid/{uuid}")
+	public ResponseEntity<Customers> searchByUuid(@PathVariable UUID uuid){
+		return ResponseEntity.ok(customersService.searchByUuid(uuid));
+	}
 	
-	@PostMapping("/delete/{uuid}")
+	@DeleteMapping("/{uuid}")
 	public void delete(@PathVariable UUID uuid) { //delete does not return data.
 		customersService.delete(uuid);
 	}
 	
-	@PostMapping("/permTrue/{uuid}")
+	@PutMapping("/permission_true/{uuid}")
 	public void permissionTrue(@PathVariable UUID uuid) {
 		customersService.permissionTrue(uuid);
 	}
 	
-	@PostMapping("/permFalse/{uuid}")
+	@PutMapping("/permission_false/{uuid}")
 	public void permissionFalse(@PathVariable UUID uuid) {
 		customersService.permissionFalse(uuid);
 	}
 	
-	@GetMapping("/getAll")
-	public ResponseEntity<List<CustomersDto>> getAll(){
-		List<Customers> customers = customersService.getAll();
-		return ResponseEntity.ok(customersConverter.entityToDto(customers));
+	@GetMapping //limit ve filtre koyulmalı
+	public ResponseEntity<Page<Customers>> getAll(Optional<Integer> page, Optional<String> sortBy){
+		Page<Customers> customers = customersService.getAll(page,sortBy);
+		return ResponseEntity.ok(customers);
 	}
-	@GetMapping("/getId/{identityNo}")
+	@GetMapping("/get_id/{identityNo}")
 	public UUID getId(@PathVariable long identityNo) {
 		return customersService.getId(identityNo);
 	}

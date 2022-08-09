@@ -1,4 +1,4 @@
-package com.demo.customers.entity;
+package com.demo.orders.entity;
 
 import java.util.Date;
 import java.util.UUID;

@@ -1,9 +1,13 @@
 package com.demo.products.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.demo.products.entity.Products;
@@ -38,8 +42,8 @@ public class ProductsServiceImpl implements ProductsService{
 	}
 
 	@Override
-	public List<Products> getAll() {
-		return (List<Products>) productsDao.findAll();
+	public Page<Products> getAll(Optional<Integer> page, Optional<String> sortBy) {
+		return  productsDao.findAll(PageRequest.of(page.orElse(0),5,Sort.Direction.ASC,sortBy.orElse("name")));
 	}
 
 	@Override
