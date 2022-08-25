@@ -17,7 +17,7 @@ public interface CustomersService {
 	public void delete(UUID uuid);
 	public void permissionTrue(UUID uuid);
 	public void permissionFalse(UUID uuid);
-	public boolean getPermission(UUID uuid);
+	public void checkPermission(UUID uuid) throws Exception;
 	public Page<Customers> getAll(Optional<Integer> page, Optional<String> sortBy);
 	public UUID getId(long identityNo);
 

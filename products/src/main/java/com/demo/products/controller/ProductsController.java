@@ -22,7 +22,7 @@ import com.demo.products.entity.Products;
 import com.demo.products.service.ProductsService;
 
 @RestController
-@RequestMapping("/apiProducts")
+@RequestMapping("/api_products")
 public class ProductsController {
 	
 	@Autowired ProductsService productsService;
@@ -49,9 +49,9 @@ public class ProductsController {
 	}
 	
 	@GetMapping("/{uuid}")
-	public ResponseEntity<ProductsDto> search(@PathVariable UUID uuid) {
+	public ResponseEntity<Products> search(@PathVariable UUID uuid) {
 		Products product = productsService.search(uuid);
-		return ResponseEntity.ok(productsConverter.entityToDto(product));
+		return ResponseEntity.ok(product);
 	}
 	
 	@GetMapping

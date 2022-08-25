@@ -12,4 +12,6 @@ import com.demo.orders.entity.Orders;
 @Repository
 public interface OrdersDao extends PagingAndSortingRepository<Orders, UUID>{
 	List<Orders> findAllByCustomerId(UUID customerId);
+	boolean existsByCustomerId(UUID customerId);
+	Orders findByCustomerId(UUID customerId);
 }

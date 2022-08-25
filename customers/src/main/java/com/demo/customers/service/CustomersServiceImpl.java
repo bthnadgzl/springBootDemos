@@ -47,9 +47,12 @@ public class CustomersServiceImpl implements CustomersService{
 		customersDao.save(customer);
 	}
 	@Override
-	public boolean getPermission(UUID uuid) {
+	public void checkPermission(UUID uuid) throws Exception {
 		Customers customer = customersDao.findById(uuid).get();
-		return customer.isPermission();
+		if(customer.isPermission() != true) {
+			throw new Exception("This customer have no permission.");
+		}
+		
 	}
 	@Override
 	public Page<Customers> getAll(Optional<Integer> page, Optional<String> sortBy){

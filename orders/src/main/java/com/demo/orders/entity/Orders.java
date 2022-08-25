@@ -3,13 +3,10 @@ package com.demo.orders.entity;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -46,29 +43,26 @@ public class Orders {
 	@JsonProperty("customer_id")
 	private UUID customerId;
 	
+	@Column(name="customer_name")
+	@JsonProperty("customer_name")
+	private String customerName;
 	
-	@Column(name = "product", nullable=false, columnDefinition = "BINARY(16)")
-	@JsonProperty("product_id")
-	private UUID productId;
+	@Column(name="customer_surname")
+	@JsonProperty("customer_surname")
+	private String customerSurname;
 	
-	@Column(name="quantity")
-	@JsonProperty("quantity")
-	private int quantity;
-	
-	@Column(name="adress")
+	@Column(name="adress") //name gibi özellikleri getir
 	@JsonProperty("adress")
 	private String adress;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="FK_ProductId")
-	private Products product;
+	@Column(name="total_price")
+	@JsonProperty("total_price")
+	private float totalPrice;
+	
 	
 
-
-	public Orders(UUID customerId, UUID productId,int quantity) {
+	public Orders(UUID customerId) {
 		this.customerId = customerId;
-		this.productId = productId;
-		this.quantity = quantity;
 	}
 	
 	
